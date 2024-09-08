@@ -1,0 +1,38 @@
+<ion-header mode="md">
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-back-button defaultHref="/tab2"></ion-back-button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+
+<div class="background">
+  <div class="content-place" *ngIf="place">
+    <img [src]="place.image" class="image">
+    <div class="info">
+      <h1 class="name">{{ place.name }}</h1>
+      <p class="param">{{ place.description }}</p>
+    </div>
+
+    <!-- Aseguramos que el título esté justo antes del contenedor de personajes -->
+    <h1 class="character-heading">Personajes del planeta {{place.name}}</h1>
+    <div class="character">
+       
+      <div class="character-place" *ngFor="let character of characters">
+        <ion-card (click)="goToCharacterDetail(character.id)">
+          <ion-card-header>
+            <ion-card-title>{{ character.name }}</ion-card-title>
+          </ion-card-header>
+
+          <ion-card-content>
+            <img [src]="character.image" alt="{{ character.name }}" class="character-image"/>
+            <p>Raza: {{ character.race }}</p>
+            <p>Ki: {{ character.ki }}</p>
+            <p>Max Ki: {{ character.maxKi }}</p>
+          </ion-card-content>
+        </ion-card>
+      </div>
+    </div>
+  </div>
+</div>
+<br>
