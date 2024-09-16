@@ -69,6 +69,9 @@ export class Tab2Page implements OnInit{
 goToPlaceDetail(id: string) {
   this.router.navigate(['place-detail', id]);  
 }
+addFavoriteCharacter(){
+  console.log('Add to favorite');
+}
 
 
   

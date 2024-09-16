@@ -79,5 +79,59 @@ ion-col{
     justify-content: center;
     align-items: center;
 }
+.loading-spinner {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-top: 20px;
+  }
+  
+  ion-spinner {
+    color: black; 
+    --spinner-width: 50px; 
+    --spinner-height: 50px; 
+  }
+  .scroll-container {
+    scrollbar-width: thin; /* Establece el grosor de la barra de desplazamiento */
+    scrollbar-color: #000 #f0f0f0; 
+  }
+  
+  .scroll-container::-webkit-scrollbar {
+    width: 8px; /* Ancho de la barra de desplazamiento */
+  }
+  
+  .scroll-container::-webkit-scrollbar-thumb {
+    background-color: black; 
+    border-radius: 4px; 
+  }
+  
+  .scroll-container::-webkit-scrollbar-thumb:hover {
+    background-color: black; 
+  }
+  
+  .loading-spinner {
+    
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-top: 20px;
+  }
+  .favorite-icon {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    font-size: 24px;
+    cursor: pointer;
+  }
+  .favorite-icon-active {
+    color: #ff0000;
+  }
+  
+ 
+  
+  
+
+  
+  
 
 

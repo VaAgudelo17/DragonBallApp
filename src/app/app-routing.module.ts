@@ -28,6 +28,16 @@ const routes: Routes = [
     path: 'place-detail/:id', 
     loadChildren: () => import('./pages/place-detail/place-detail.module').then(m => m.PlaceDetailPageModule)
   },
+  {
+    path: 'intro',
+    loadChildren: () => import('./pages/intro/intro.module').then(m => m.IntroPageModule),
+  },
+ 
+  {
+    path: 'tab3',
+    loadChildren: () => import('./pages/tab3/tab3.module').then( m => m.Tab3PageModule)
+  },
+ 
  
 ];
 @NgModule({
