@@ -20,20 +20,27 @@ export class Tab3Page implements OnInit {
 
   private loadFavorites() {
     const favorites = localStorage.getItem('favorites');
+    console.log("Loading favorites from storage:", favorites);
     if (favorites) {
-      const favIds = JSON.parse(favorites);
-      this.favorites = new Set(favIds);
-      this.loadFavoriteCharacters();  
+        const favIds = JSON.parse(favorites);
+        this.favorites = new Set(favIds);
+        this.loadFavoriteCharacters();  
     }
-  }
+}
 
-  private loadFavoriteCharacters() {
-    this.favorites.forEach((id) => {
+
+private loadFavoriteCharacters() {
+  this.favoriteCharacters = []; 
+  this.favorites.forEach((id) => {
       this.dragonBallSvc.getCharacterById(id).subscribe((character: any) => {
-        this.favoriteCharacters.push(character);
+          if (!this.favoriteCharacters.some(fav => fav.id === character.id)) {
+              this.favoriteCharacters.push(character);
+          }
       });
-    });
-  }
+  });
+}
+
+
 
   goToCharacterDetail(id: string) {
     this.router.navigate(['character-detail', id]);

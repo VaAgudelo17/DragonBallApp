@@ -87,20 +87,22 @@ export class Tab1Page implements OnInit {
   isFavorite(character: any): boolean {
     return this.favorites.has(character.id);
   }
-
   toggleFavorite(character: any, event: Event): void {
     event.stopPropagation(); 
 
+    console.log("Toggling favorite for:", character);
+
     if (this.isFavorite(character)) {
-      this.favorites.delete(character.id);
-      console.log("Su personaje "+ character.name +" fue eliminado de favoritos");
-      this.updateFavoritesInStorage();
+        this.favorites.delete(character.id);
+        console.log("Eliminando favorito:", character.id);
+        this.updateFavoritesInStorage();
     } else {
-      this.favorites.add(character.id);
-      console.log("Su personaje "+ character.name +" fue añadido a favoritos");
-      this.updateFavoritesInStorage();
+        this.favorites.add(character.id);
+        console.log("Añadiendo a favoritos:", character.id);
+        this.updateFavoritesInStorage();
     }
-  }
+}
+
   private loadFavorites() {
     const favorites = localStorage.getItem('favorites');
     if (favorites) {
@@ -110,5 +112,7 @@ export class Tab1Page implements OnInit {
   }
   private updateFavoritesInStorage() {
     localStorage.setItem('favorites', JSON.stringify(Array.from(this.favorites)));
-  }
+    console.log("Favorites updated in storage:", Array.from(this.favorites));
+}
+
 }
