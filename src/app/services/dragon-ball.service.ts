@@ -1,6 +1,6 @@
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { catchError, Observable, throwError } from 'rxjs';
+import { BehaviorSubject, catchError, Observable, throwError } from 'rxjs';
 import { environment } from 'src/environments/environment.prod';
 
 @Injectable({
@@ -9,6 +9,8 @@ import { environment } from 'src/environments/environment.prod';
 export class DragonBallService {
   private apiUrl = 'https://dragonball-api.com/api/characters'; 
   private apiUrl2 = 'https://dragonball-api.com/api/planets'; 
+  private favoritesSubject = new BehaviorSubject<Set<number>>(new Set<number>());
+  favorites$ = this.favoritesSubject.asObservable();
 
   constructor(private http: HttpClient) {}
 
