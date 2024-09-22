@@ -14,35 +14,35 @@ export class Tab3Page implements OnInit {
   constructor(private router: Router, private dragonBallSvc: DragonBallService) {}
 
   ngOnInit() {
-    this.loadFavorites();  
+    this.loadFavorites();
+  
   }
-
-
-  private loadFavorites() {
-    const favorites = localStorage.getItem('favorites');
-    console.log("Loading favorites from storage:", favorites);
-    if (favorites) {
-        const favIds = JSON.parse(favorites);
-        this.favorites = new Set(favIds);
-        this.loadFavoriteCharacters();  
-    }
-}
-
-
-private loadFavoriteCharacters() {
-  this.favoriteCharacters = []; 
-  this.favorites.forEach((id) => {
-      this.dragonBallSvc.getCharacterById(id).subscribe((character: any) => {
-          if (!this.favoriteCharacters.some(fav => fav.id === character.id)) {
-              this.favoriteCharacters.push(character);
-          }
-      });
-  });
-}
-
 
 
   goToCharacterDetail(id: string) {
     this.router.navigate(['character-detail', id]);
   }
+
+  loadFavorites(): void {
+    const storedFavorites = localStorage.getItem('favorites');
+    if (storedFavorites) {
+      this.favorites = new Set<string>(JSON.parse(storedFavorites));
+      this.getFavoriteCharacters();
+    }
+  }
+
+  getFavoriteCharacters(): void {
+    this.favoriteCharacters = []; // Reiniciar el array
+    this.favorites.forEach((id) => {
+      this.dragonBallSvc.getCharacterById(id).subscribe({
+        next: (character) => {
+          this.favoriteCharacters.push(character);
+        },
+        error: (error) => {
+          console.error('Error fetching character:', error);
+        },
+      });
+    });
+  }
+
 }

@@ -19,13 +19,13 @@ export class Tab1Page implements OnInit {
   params = { page: 0, name: '' };
   allCharactersLoaded = false;
   loading = false;
-  favorites: Set<number> = new Set<number>(); 
+  favorites: Set<string> = new Set<string>();
 
   constructor(private dragonBallSvc: DragonBallService, private router: Router ) {}
 
   ngOnInit() {
     this.params.page = 0;
-    this.loadFavorites();  
+    this.loadFavorites();
     this.getCharacters();
   }
 
@@ -87,32 +87,31 @@ export class Tab1Page implements OnInit {
   isFavorite(character: any): boolean {
     return this.favorites.has(character.id);
   }
+
+
   toggleFavorite(character: any, event: Event): void {
-    event.stopPropagation(); 
 
-    console.log("Toggling favorite for:", character);
-
-    if (this.isFavorite(character)) {
-        this.favorites.delete(character.id);
-        console.log("Eliminando favorito:", character.id);
-        this.updateFavoritesInStorage();
-    } else {
-        this.favorites.add(character.id);
-        console.log("Añadiendo a favoritos:", character.id);
-        this.updateFavoritesInStorage();
-    }
-}
-
-  private loadFavorites() {
-    const favorites = localStorage.getItem('favorites');
-    if (favorites) {
-      const favIds = JSON.parse(favorites);
-      this.favorites = new Set(favIds);
-    }
+  if (this.favorites.has(character.id)) {
+   
+    this.favorites.delete(character.id);
+    console.log ('Tu personaje '+character.name+' fue eliminado de favoritos')
+  } else {
+    
+    this.favorites.add(character.id);
+    console.log('Tu personaje '+character.name+' fue añadido a favoritos' )
   }
-  private updateFavoritesInStorage() {
-    localStorage.setItem('favorites', JSON.stringify(Array.from(this.favorites)));
-    console.log("Favorites updated in storage:", Array.from(this.favorites));
+
+  // Opcional: Puedes agregar lógica aquí para guardar los favoritos en localStorage si lo deseas
+  localStorage.setItem('favorites', JSON.stringify(Array.from(this.favorites)));
+
 }
+loadFavorites(): void {
+  const storedFavorites = localStorage.getItem('favorites');
+  if (storedFavorites) {
+    this.favorites = new Set<string>(JSON.parse(storedFavorites));
+  }
+}
+
+  
 
 }
