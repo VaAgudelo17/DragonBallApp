@@ -85,7 +85,6 @@ export class Tab1Page implements OnInit {
     if (this.isFavorite(character)) {
       this.favorites.delete(character.id);
       console.log("Su personaje "+ character.name +" fue eliminado de favoritos");
-
       this.updateFavoritesInStorage();
     } else {
       this.favorites.add(character.id);
@@ -93,7 +92,6 @@ export class Tab1Page implements OnInit {
       this.updateFavoritesInStorage();
     }
   }
-
   private loadFavorites() {
     const favorites = localStorage.getItem('favorites');
     if (favorites) {
@@ -101,7 +99,6 @@ export class Tab1Page implements OnInit {
       this.favorites = new Set(favIds);
     }
   }
-
   private updateFavoritesInStorage() {
     localStorage.setItem('favorites', JSON.stringify(Array.from(this.favorites)));
   }

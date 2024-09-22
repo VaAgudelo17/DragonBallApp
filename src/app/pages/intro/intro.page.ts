@@ -19,7 +19,7 @@ export class IntroPage implements OnInit {
 
   ngOnInit() {
     setTimeout(() =>{
-      this.router.navigateByUrl('/tab1')
+      this.router.navigateByUrl('/tabs/tab1')
     },1500);
   }
 

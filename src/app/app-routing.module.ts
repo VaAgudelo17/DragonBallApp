@@ -7,6 +7,17 @@ const routes: Routes = [
     redirectTo:'intro',
     pathMatch: 'full'
   },
+  {
+    path: '***',
+    redirectTo: 'intro', 
+    pathMatch: 'full'
+  },
+  {
+    path: 'tabs', 
+    redirectTo: 'intro',
+    pathMatch: 'full'
+  },
+
 
   {
     path: 'character-detail/:id', 
@@ -16,14 +27,8 @@ const routes: Routes = [
     path: '',
     loadChildren: () => import('./pages/intro/intro.module').then( m => m.IntroPageModule),
   },
-  {
-    path: 'tab1',
-    loadChildren: () => import('./pages/tab1/tab1.module').then( m => m.Tab1PageModule)
-  },
-  {
-    path: 'tab2',
-    loadChildren: () => import('./pages/tab2/tab2.module').then( m => m.Tab2PageModule)
-  },
+ 
+ 
   {
     path: 'place-detail/:id', 
     loadChildren: () => import('./pages/place-detail/place-detail.module').then(m => m.PlaceDetailPageModule)
@@ -34,8 +39,8 @@ const routes: Routes = [
   },
  
   {
-    path: 'tab3',
-    loadChildren: () => import('./pages/tab3/tab3.module').then( m => m.Tab3PageModule)
+    path: 'tabs',
+    loadChildren: () => import('./pages/tabs/tabs.module').then(m => m.TabsPageModule)  
   },
  
  
