@@ -15,9 +15,15 @@ export class Tab3Page implements OnInit {
 
   ngOnInit() {
     this.loadFavorites();
+    window.addEventListener('storage', () => {
+      this.loadFavorites();
+    });
   
   }
-
+///metodo para que cargue los personajes fav sin necesidad de recargar la pagina 
+  ionViewWillEnter() {
+    this.loadFavorites();
+  }
 
   goToCharacterDetail(id: string) {
     this.router.navigate(['character-detail', id]);
@@ -32,7 +38,7 @@ export class Tab3Page implements OnInit {
   }
 
   getFavoriteCharacters(): void {
-    this.favoriteCharacters = []; // Reiniciar el array
+    this.favoriteCharacters = []; 
     this.favorites.forEach((id) => {
       this.dragonBallSvc.getCharacterById(id).subscribe({
         next: (character) => {
