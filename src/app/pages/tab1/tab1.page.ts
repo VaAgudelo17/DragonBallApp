@@ -34,26 +34,35 @@ export class Tab1Page implements OnInit {
       if (event) event.target.complete();
       return;
     }
-    this.loading = true;
+  
+    this.loading = true; 
     this.params.page += 1;
+  
     this.dragonBallSvc.getCharacters(this.params).subscribe({
       next: (res: any) => {
         this.characters.push(...res.items);
-        this.allCharacters.push(...res.items); 
+        this.allCharacters.push(...res.items);
+  
         console.log(this.characters);
-
+  
+       
         if (res.items.length === 0) {
           this.allCharactersLoaded = true;
+          this.loading = false; // Se deja de mostrar el spinner
+        } else {
+          this.loading = false; // Deja de mostrar el spinner si se cargan elementos
         }
-
+  
         if (event) event.target.complete();
       },
       error: (error: any) => {
         if (event) event.target.complete();
         console.error('Error fetching characters:', error);
+        this.loading = false; // Se muestre el spinner si hay error
       },
     });
   }
+  
 
   searchCharacters(event?: any) {
     if (!this.params.name) {
