@@ -15,13 +15,13 @@ import { SharedModule } from 'src/app/shared/shared.module';
 })
 export class Tab1Page implements OnInit {
   characters: any[] = [];
-  allCharacters: any[] = []; 
+  allCharacters: any[] = [];
   params = { page: 0, name: '' };
   allCharactersLoaded = false;
   loading = false;
   favorites: Set<string> = new Set<string>();
 
-  constructor(private dragonBallSvc: DragonBallService, private router: Router ) {}
+  constructor(private dragonBallSvc: DragonBallService, private router: Router) { }
 
   ngOnInit() {
     this.params.page = 0;
@@ -34,25 +34,25 @@ export class Tab1Page implements OnInit {
       if (event) event.target.complete();
       return;
     }
-  
-    this.loading = true; 
+
+    this.loading = true;
     this.params.page += 1;
-  
+
     this.dragonBallSvc.getCharacters(this.params).subscribe({
       next: (res: any) => {
         this.characters.push(...res.items);
         this.allCharacters.push(...res.items);
-  
+
         console.log(this.characters);
-  
-       
+
+
         if (res.items.length === 0) {
           this.allCharactersLoaded = true;
           this.loading = false; // Se deja de mostrar el spinner
         } else {
           this.loading = false; // Deja de mostrar el spinner si se cargan elementos
         }
-  
+
         if (event) event.target.complete();
       },
       error: (error: any) => {
@@ -62,11 +62,11 @@ export class Tab1Page implements OnInit {
       },
     });
   }
-  
+
 
   searchCharacters(event?: any) {
     if (!this.params.name) {
-      this.characters = this.allCharacters; 
+      this.characters = this.allCharacters;
       if (event) event.target.complete();
       return;
     }
@@ -77,11 +77,11 @@ export class Tab1Page implements OnInit {
   }
 
   goToCharacterDetail(id: string) {
-    this.router.navigate(['character-detail', id]);  
+    this.router.navigate(['character-detail', id]);
   }
 
   goToTab2() {
-    this.router.navigate(['/tabs/tab2']);  
+    this.router.navigate(['/tabs/tab2']);
   }
 
   isFavorite(character: any): boolean {
@@ -91,27 +91,26 @@ export class Tab1Page implements OnInit {
 
   toggleFavorite(character: any, event: Event): void {
 
-  if (this.favorites.has(character.id)) {
-   
-    this.favorites.delete(character.id);
-    console.log ('Tu personaje '+character.name+' fue eliminado de favoritos')
-  } else {
-    
-    this.favorites.add(character.id);
-    console.log('Tu personaje '+character.name+' fue añadido a favoritos' )
+    if (this.favorites.has(character.id)) {
+
+      this.favorites.delete(character.id);
+      console.log('Tu personaje ' + character.name + ' fue eliminado de favoritos')
+    } else {
+
+      this.favorites.add(character.id);
+      console.log('Tu personaje ' + character.name + ' fue añadido a favoritos')
+    }
+
+    // Opcional: Puedes agregar lógica aquí para guardar los favoritos en localStorage si lo deseas
+    localStorage.setItem('favorites', JSON.stringify(Array.from(this.favorites)));
+
   }
 
-  // Opcional: Puedes agregar lógica aquí para guardar los favoritos en localStorage si lo deseas
-  localStorage.setItem('favorites', JSON.stringify(Array.from(this.favorites)));
-
-}
-loadFavorites(): void {
-  const storedFavorites = localStorage.getItem('favorites');
-  if (storedFavorites) {
-    this.favorites = new Set<string>(JSON.parse(storedFavorites));
+  loadFavorites(): void {
+    const storedFavorites = localStorage.getItem('favorites');
+    if (storedFavorites) {
+      this.favorites = new Set<string>(JSON.parse(storedFavorites));
+    }
   }
-}
-
-  
 
 }

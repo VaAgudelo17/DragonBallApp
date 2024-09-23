@@ -16,7 +16,8 @@
               <ion-img [src]="c.image" class="character-image"></ion-img>
               <ion-icon 
                 name="heart" 
-                class="favorite-icon favorite-icon-active">
+                [ngClass]="{'favorite-icon': true, 'favorite-icon-active': isFavorite(c)}"
+                (click)="toggleFavorite(c, $event); $event.stopPropagation();">
               </ion-icon>
             </div>
             <ion-card-content class="info">

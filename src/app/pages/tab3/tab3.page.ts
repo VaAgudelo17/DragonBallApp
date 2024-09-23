@@ -53,4 +53,32 @@ export class Tab3Page implements OnInit {
     });
   }
 
+  isFavorite(character: any): boolean {
+    return this.favorites.has(character.id);
+  }
+
+  toggleFavorite(character: any, event: Event): void {
+    if (this.favorites.has(character.id)) {
+      this.favorites.delete(character.id);
+      console.log('Tu personaje ' + character.name + ' fue eliminado de favoritos');
+  
+      setTimeout(() => {
+        this.favoriteCharacters = this.favoriteCharacters.filter(c => c.id !== character.id);
+      }, 500);
+    } else {
+      this.favorites.add(character.id);
+      console.log('Tu personaje ' + character.name + ' fue añadido a favoritos');
+  
+      this.dragonBallSvc.getCharacterById(character.id).subscribe({
+        next: (newCharacter) => {
+          this.favoriteCharacters.push(newCharacter);
+        },
+        error: (error) => {
+          console.error('Error fetching character:', error);
+        },
+      });
+    }
+    localStorage.setItem('favorites', JSON.stringify(Array.from(this.favorites)));
+  }
+  
 }
