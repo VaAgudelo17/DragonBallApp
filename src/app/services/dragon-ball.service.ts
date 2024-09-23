@@ -1,7 +1,6 @@
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { BehaviorSubject, catchError, Observable, throwError } from 'rxjs';
-import { environment } from 'src/environments/environment.prod';
 
 @Injectable({
   providedIn: 'root'
@@ -9,10 +8,15 @@ import { environment } from 'src/environments/environment.prod';
 export class DragonBallService {
   private apiUrl = 'https://dragonball-api.com/api/characters'; 
   private apiUrl2 = 'https://dragonball-api.com/api/planets'; 
-  private favoritesSubject = new BehaviorSubject<Set<number>>(new Set<number>());
+  private favoritesSubject = new BehaviorSubject<Set<string>>(new Set<string>());
   favorites$ = this.favoritesSubject.asObservable();
 
-  constructor(private http: HttpClient) {}
+  constructor(private http: HttpClient) {
+    const storedFavorites = localStorage.getItem('favorites');
+    if (storedFavorites) {
+      this.favoritesSubject.next(new Set<string>(JSON.parse(storedFavorites)));
+    }
+  }
 
   getCharacters(params: any): Observable<any> {
     let httpParams = new HttpParams();
@@ -22,12 +26,11 @@ export class DragonBallService {
     if (params.name) {
       httpParams = httpParams.set('name', params.name);
     }
-   
 
     return this.http.get(this.apiUrl, { params: httpParams });
   }
   
-  getPlaces (params: any):Observable<any>{
+  getPlaces(params: any): Observable<any> {
     let httpParams = new HttpParams();
     if (params.page) {
       httpParams = httpParams.set('page', params.page);
@@ -38,7 +41,7 @@ export class DragonBallService {
     return this.http.get(this.apiUrl2, { params: httpParams });
   }
 
-  getCharacterById (id:string){
+  getCharacterById(id: string): Observable<any> {
     if (!id) {
       return throwError(() => new Error('ID is required to fetch character'));
     }
@@ -51,24 +54,37 @@ export class DragonBallService {
     );
   }
 
-  getPlaceById (id:string){
+  getPlaceById(id: string): Observable<any> {
     if (!id) {
       return throwError(() => new Error('ID is required to fetch place'));
     }
 
     return this.http.get(`${this.apiUrl2}/${id}`).pipe(
       catchError((error) => {
-
-        return throwError(() => new Error('Error fetching character by ID'));
+        return throwError(() => new Error('Error fetching place by ID'));
       })
     );
   }
-  getByUrl(url:string){
-    return this.http.get(url)
 
+  getByUrl(url: string): Observable<any> {
+    return this.http.get(url);
   }
 
+  toggleFavorite(characterId: string): void {
+    const currentFavorites = this.favoritesSubject.value;
 
-  
+    if (currentFavorites.has(characterId)) {
+      currentFavorites.delete(characterId); 
+    } else {
+      currentFavorites.add(characterId);
+    }
 
+    this.favoritesSubject.next(new Set<string>(currentFavorites));
+
+    localStorage.setItem('favorites', JSON.stringify(Array.from(currentFavorites)));
+  }
+
+  isFavorite(characterId: string): boolean {
+    return this.favoritesSubject.value.has(characterId);
+  }
 }

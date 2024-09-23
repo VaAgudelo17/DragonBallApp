@@ -1,6 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { DragonBallService } from 'src/app/services/dragon-ball.service';
+import { forkJoin, of } from 'rxjs';
+import { catchError } from 'rxjs/operators';
 
 @Component({
   selector: 'app-tab3',
@@ -8,8 +10,8 @@ import { DragonBallService } from 'src/app/services/dragon-ball.service';
   styleUrls: ['tab3.page.scss'],
 })
 export class Tab3Page implements OnInit {
-  favoriteCharacters: any[] = [];  
-  favorites: Set<string> = new Set<string>();  
+  favoriteCharacters: any[] = [];
+  favorites: Set<string> = new Set<string>();
 
   constructor(private router: Router, private dragonBallSvc: DragonBallService) {}
 
@@ -18,14 +20,12 @@ export class Tab3Page implements OnInit {
     window.addEventListener('storage', () => {
       this.loadFavorites();
     });
-  
   }
-///metodo para que cargue los personajes fav sin necesidad de recargar la pagina 
+
+  // Método para cargar los personajes favoritos sin necesidad de recargar la página
   ionViewWillEnter() {
     this.loadFavorites();
   }
-
-
 
   goToCharacterDetail(id: string) {
     this.router.navigate(['character-detail', id]);
@@ -40,16 +40,31 @@ export class Tab3Page implements OnInit {
   }
 
   getFavoriteCharacters(): void {
-    this.favoriteCharacters = []; 
-    this.favorites.forEach((id) => {
-      this.dragonBallSvc.getCharacterById(id).subscribe({
-        next: (character) => {
-          this.favoriteCharacters.push(character);
-        },
-        error: (error) => {
+    this.favoriteCharacters = [];
+    const characterRequests = Array.from(this.favorites).map((id) =>
+      this.dragonBallSvc.getCharacterById(id).pipe(
+        catchError((error) => {
           console.error('Error fetching character:', error);
-        },
+          return of(null); 
+        })
+      )
+    );
+    
+    forkJoin(characterRequests).subscribe((characters) => {
+      console.log('Fetched characters:', characters); 
+
+      characters.forEach((character) => {
+        if (character) {
+          const isDuplicate = this.favoriteCharacters.some((c) => c.id === character.id);
+          if (!isDuplicate) {
+            this.favoriteCharacters.push(character);
+          } else {
+            console.warn('Duplicate character found and ignored:', character);
+          }
+        }
       });
+      
+      console.log('Final favorite characters list:', this.favoriteCharacters);
     });
   }
 
@@ -58,20 +73,23 @@ export class Tab3Page implements OnInit {
   }
 
   toggleFavorite(character: any, event: Event): void {
+    event.stopPropagation();
     if (this.favorites.has(character.id)) {
       this.favorites.delete(character.id);
       console.log('Tu personaje ' + character.name + ' fue eliminado de favoritos');
-  
       setTimeout(() => {
         this.favoriteCharacters = this.favoriteCharacters.filter(c => c.id !== character.id);
       }, 500);
     } else {
       this.favorites.add(character.id);
       console.log('Tu personaje ' + character.name + ' fue añadido a favoritos');
-  
+
       this.dragonBallSvc.getCharacterById(character.id).subscribe({
         next: (newCharacter) => {
-          this.favoriteCharacters.push(newCharacter);
+          const isDuplicate = this.favoriteCharacters.some(c => c.id === newCharacter.id);
+          if (!isDuplicate) {
+            this.favoriteCharacters.push(newCharacter);
+          }
         },
         error: (error) => {
           console.error('Error fetching character:', error);
@@ -80,5 +98,4 @@ export class Tab3Page implements OnInit {
     }
     localStorage.setItem('favorites', JSON.stringify(Array.from(this.favorites)));
   }
-  
 }

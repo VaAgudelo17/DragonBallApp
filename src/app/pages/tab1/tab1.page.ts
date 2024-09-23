@@ -11,7 +11,7 @@ import { SharedModule } from 'src/app/shared/shared.module';
   templateUrl: 'tab1.page.html',
   styleUrls: ['tab1.page.scss'],
   standalone: true,
-  imports: [IonicModule, CommonModule, FormsModule, SharedModule]
+  imports: [IonicModule, CommonModule, FormsModule, SharedModule],
 })
 export class Tab1Page implements OnInit {
   characters: any[] = [];
@@ -21,12 +21,20 @@ export class Tab1Page implements OnInit {
   loading = false;
   favorites: Set<string> = new Set<string>();
 
-  constructor(private dragonBallSvc: DragonBallService, private router: Router) { }
+  constructor(private dragonBallSvc: DragonBallService, private router: Router) {}
 
   ngOnInit() {
     this.params.page = 0;
     this.loadFavorites();
     this.getCharacters();
+
+    window.addEventListener('storage', () => {
+      this.loadFavorites();
+    });
+  }
+
+  ionViewWillEnter() {
+    this.loadFavorites();
   }
 
   getCharacters(event?: any) {
@@ -43,26 +51,20 @@ export class Tab1Page implements OnInit {
         this.characters.push(...res.items);
         this.allCharacters.push(...res.items);
 
-        console.log(this.characters);
-
-
         if (res.items.length === 0) {
           this.allCharactersLoaded = true;
-          this.loading = false; // Se deja de mostrar el spinner
-        } else {
-          this.loading = false; // Deja de mostrar el spinner si se cargan elementos
         }
+        this.loading = false;
 
         if (event) event.target.complete();
       },
       error: (error: any) => {
-        if (event) event.target.complete();
         console.error('Error fetching characters:', error);
-        this.loading = false; // Se muestre el spinner si hay error
+        this.loading = false;
+        if (event) event.target.complete();
       },
     });
   }
-
 
   searchCharacters(event?: any) {
     if (!this.params.name) {
@@ -88,22 +90,18 @@ export class Tab1Page implements OnInit {
     return this.favorites.has(character.id);
   }
 
-
   toggleFavorite(character: any, event: Event): void {
-
+    event.stopPropagation();
     if (this.favorites.has(character.id)) {
 
       this.favorites.delete(character.id);
-      console.log('Tu personaje ' + character.name + ' fue eliminado de favoritos')
+      console.log('Tu personaje ' + character.name + ' fue eliminado de favoritos');
     } else {
-
       this.favorites.add(character.id);
-      console.log('Tu personaje ' + character.name + ' fue añadido a favoritos')
+      console.log('Tu personaje ' + character.name + ' fue añadido a favoritos');
     }
 
-    // Opcional: Puedes agregar lógica aquí para guardar los favoritos en localStorage si lo deseas
     localStorage.setItem('favorites', JSON.stringify(Array.from(this.favorites)));
-
   }
 
   loadFavorites(): void {
@@ -112,5 +110,4 @@ export class Tab1Page implements OnInit {
       this.favorites = new Set<string>(JSON.parse(storedFavorites));
     }
   }
-
 }
