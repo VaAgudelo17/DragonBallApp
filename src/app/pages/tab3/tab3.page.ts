@@ -25,6 +25,8 @@ export class Tab3Page implements OnInit {
     this.loadFavorites();
   }
 
+
+
   goToCharacterDetail(id: string) {
     this.router.navigate(['character-detail', id]);
   }
