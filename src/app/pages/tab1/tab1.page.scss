@@ -72,7 +72,15 @@ ion-infinite-scroll-content{
     color: black;
 }
 ion-searchbar{
-    width: 60%;   
+  width: 60%;
+  background-color: black; 
+  --background: black; 
+  --color: white; 
+  --placeholder-color: white; 
+  --icon-color: white; 
+  --clear-button-color: white; 
+  border-radius: 8px; 
+  padding: 5px; 
 }
 ion-col{
     display: flex;
