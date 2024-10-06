@@ -5,14 +5,26 @@
 </ion-header>
 
 <ion-content [fullscreen]="true">
+  
   <ion-header collapse="condense">
     <ion-toolbar>
       <ion-title size="large">Ubicación Actual</ion-title>
     </ion-toolbar>
   </ion-header>
 
+  <!-- Contenedor para el título -->
+  <div class="title-container">
+    <h1 class="map-title">¡CAPTURA AL VILLANO 💀 !</h1>
+  </div>
+
   <!-- Contenedor para centrar el mapa -->
   <div class="map-container">
     <div id="mapId"></div>
+
+    <!-- Botón con imagen a la derecha del mapa -->
+    <ion-button fill="clear" class="map-button" (click)="goToVillains()">
+      <img src="assets/img/majinboo.png" alt="Majin Boo" class="button-icon">
+    </ion-button>
+    
   </div>
 </ion-content>

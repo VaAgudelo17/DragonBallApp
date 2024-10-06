@@ -1,15 +1,57 @@
 .map-container {
+    position: relative; /* Asegúrate de que el contenedor tenga posicionamiento relativo */
     display: flex;
     justify-content: center; /* Centra horizontalmente */
     align-items: center; /* Centra verticalmente */
     height: 100%; /* Ocupa toda la altura del contenido */
-}
+  }
   
+  #mapId {
+    width: 80vw; /* 80% del ancho de la pantalla */
+    height: 60vh; /* 60% de la altura de la pantalla */
+    border: 2px solid #000; /* Añade un borde si lo deseas */
+    border-radius: 10px; /* Bordes redondeados */
+    transition: margin-left 0.3s ease; /* Añadir transición para suavidad */
+  }
+  
+  .title-container {
+    text-align: center; /* Centra el texto */
+    margin-top: 10px; /* Ajusta este valor para bajar el título sin afectar el mapa */
+  }
+  
+  .map-title {
+    font-size: 24px; /* Ajusta el tamaño de la fuente según sea necesario */
+    color: #ffffff97; /* Cambia el color a rojo (o cualquier color que prefieras) */
+    font-weight: bold; /* Negrita para mayor énfasis */
+  }
+  
+  .map-button {
+    position: absolute;
+    right: 20px; /* Posición desde la derecha */
+    top: 82%; /* Ajusta este valor para bajar el ícono (aumenta el porcentaje para bajar más) */
+    --padding: 0; /* Para eliminar el padding del botón */
+  }
+  
+  .button-icon {
+    width: 95px; /* Tamaño de la imagen del botón */
+    height: 95px; /* Tamaño de la imagen del botón */
+  }
+  
+  /* Media Queries para pantallas pequeñas */
+  @media (max-width: 768px) {
     #mapId {
-      width: 80vw; /* 80% del ancho de la pantalla */
-      height: 60vh; /* 60% de la altura de la pantalla */
-      border: 2px solid #000; /* Añade un borde si lo deseas */
-      border-radius: 10px; /* Bordes redondeados */
+      margin-left: 20px; /* Mueve el mapa hacia la izquierda */
+      width: 75vw; /* Ajusta el ancho del mapa en pantallas más pequeñas */
     }
   
+    .button-icon {
+      width: 70px; /* Ajusta el tamaño de la imagen en pantallas más pequeñas */
+      height: 70px;
+    }
+  
+    .map-button {
+      right: 10px; /* Ajusta la posición del botón en pantallas más pequeñas */
+      top: 30%; /* Ajusta este valor para bajar el ícono en pantallas más pequeñas */
+    }
+  }
   

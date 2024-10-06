@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { Router } from '@angular/router';
 import { Geolocation } from '@awesome-cordova-plugins/geolocation/ngx';
 import * as L from 'leaflet';
 
@@ -11,7 +12,15 @@ export class Tab4Page implements OnInit {
   map: L.Map | undefined;
   currentLocationMarker: L.Marker | undefined;
 
-  constructor(private geolocation: Geolocation) {}
+  constructor(private geolocation: Geolocation, private router: Router) {
+    const accessedFromButton = sessionStorage.getItem('accessedFromButton');
+
+    // Si no se accedió desde el botón, redirige a la página de inicio
+   
+    // Limpia el acceso
+ 
+  
+  }
 
   ngOnInit() {
     this.loadMap();
@@ -56,4 +65,9 @@ export class Tab4Page implements OnInit {
       console.log('Error al vigilar la localización', error);
     });
   }
+  goToVillains() {
+    this.router.navigate(['villains'])
+  }
+
+  
 }
