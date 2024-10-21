@@ -45,5 +45,11 @@
 	</array>
 	<key>UIViewControllerBasedStatusBarAppearance</key>
 	<true/>
+	<key>NSLocationWhenInUseUsageDescription</key>
+	<string>La aplicación necesita acceder a tu ubicación mientras esté en uso.</string>
+	<key>NSLocationAlwaysUsageDescription</key>
+	<string>La aplicación necesita acceso continuo a tu ubicación para mejorar la experiencia.</string>
+	<key>NSCameraUsageDescription</key>
+	<string>La aplicación necesita acceso a la cámara para escanear códigos QR.</string>
 </dict>
 </plist>

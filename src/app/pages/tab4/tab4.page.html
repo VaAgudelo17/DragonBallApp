@@ -14,17 +14,23 @@
 
   <!-- Contenedor para el título -->
   <div class="title-container">
-    <h1 class="map-title">¡CAPTURA AL VILLANO 💀 !</h1>
+    <h1 class="map-title">¡CAPTURA AL VILLANO!</h1>
+    <h3>DETECTA SU KI</h3>
   </div>
 
   <!-- Contenedor para centrar el mapa -->
   <div class="map-container">
     <div id="mapId"></div>
+  </div>
 
-    <!-- Botón con imagen a la derecha del mapa -->
+  <!-- Botones debajo del contenedor del mapa -->
+  <div class="button-container">
+    <ion-button fill="clear" class="camera-button" (click)="scanQRCode()">
+      <img src="assets/img/camera.png" alt="camera" class="camera-icon">
+    </ion-button>
+
     <ion-button fill="clear" class="map-button" (click)="goToVillains()">
       <img src="assets/img/majinboo.png" alt="Majin Boo" class="button-icon">
     </ion-button>
-    
   </div>
 </ion-content>

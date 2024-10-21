@@ -1,6 +1,7 @@
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { BehaviorSubject, catchError, Observable, throwError } from 'rxjs';
+import { BehaviorSubject, catchError, map, Observable, throwError } from 'rxjs';
+
 
 @Injectable({
   providedIn: 'root'
@@ -87,4 +88,8 @@ export class DragonBallService {
   isFavorite(characterId: string): boolean {
     return this.favoritesSubject.value.has(characterId);
   }
+
+  // En DragonBallService
+
+
 }
