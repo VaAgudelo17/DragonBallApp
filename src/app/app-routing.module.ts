@@ -45,6 +45,10 @@ const routes: Routes = [
   {
     path: 'villains',
     loadChildren: () => import('./pages/villains/villains.module').then( m => m.VillainsPageModule)
+  },
+  {
+    path: 'login',
+    loadChildren: () => import('./pages/login/login.module').then( m => m.LoginPageModule)
   }
 
  

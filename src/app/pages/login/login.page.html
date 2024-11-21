@@ -1,0 +1,36 @@
+<ion-content>
+<div class="goku-icon">
+
+
+    <img src="assets/img/goku.png" alt="" class=""/>
+  </div>
+ 
+  <div class="main">
+    <ion-checkbox id="chk" aria-hidden="true"></ion-checkbox>
+    
+
+    <div class="signup" [ngClass]="{'show': !showLogin}">
+      <form>
+        <label for="chk" aria-hidden="true">
+          <img src="assets/img/title.png" alt="" class="title-icon" />
+        </label>
+        <ion-input type="text" placeholder="User name" required></ion-input>
+        <ion-input type="email" placeholder="Email" required></ion-input>
+        <ion-input type="password" placeholder="Password" required></ion-input>
+        <ion-button expand="full" (click)="signUp()">Sign up</ion-button>
+      </form>
+     
+    </div>
+    
+    
+    <div class="login" [ngClass]="{'show': showLogin}">
+      <form>
+        <label for="chk" aria-hidden="true">Login</label>
+        <ion-input type="email" placeholder="Email" required></ion-input>
+        <ion-input type="password" placeholder="Password" required></ion-input>
+        <ion-button expand="full" (click)="login()">Login</ion-button>
+      </form>
+    </div>
+  </div>
+
+</ion-content>
