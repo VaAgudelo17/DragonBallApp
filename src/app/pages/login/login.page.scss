@@ -25,16 +25,22 @@ body {
     transform: translate(-50%, -50%); /* Asegura el centro exacto */
 }
 
+
 #chk {
     display: none;
 }
 #chk:checked ~ .login {
     transform: translateY(0); /* Muestra la sección de login */
+    transform: translateY(100%);
   }
+
   
   #chk:checked ~ .signup {
-    transform: translateY(-100%); /* Oculta la sección de sign up */
+    /* Oculta la sección de sign up */
+    transform: translateY(0);
   }
+
+
 
 .signup, .login {
     position: relative;
@@ -122,6 +128,10 @@ ion-content {
 .login-form {
     z-index: 2; 
 }
+.signup-form{
+    z-index: 2; 
+    margin-top: 50%;
+}
 #chk {
     display: none;
 }
@@ -150,8 +160,8 @@ ion-content {
     border-radius: 5px;
   }
   #chk:checked ~ .login {
-    transform: translateY(-500px);
-    z-index: 0;
+    transform: translateY(-540px);
+ 
   }
   #chk:checked ~ .login label {
     transform: scale(1);
@@ -160,17 +170,30 @@ ion-content {
   #chk:checked ~ .signup label {
     transform: scale(0.6);
   }
+
   
   .signup {
     transform: translateY(0);
   }
   .signup label{
-    margin-top: 10%;
+    margin-top: 20%;
+    transform: scale(.9);
+    color: orange;
   }
  
   .login label{
 	color: #091756;
 	transform: scale(.6);
+}
+label{
+	color: #fff;
+	font-size: 2.3em;
+	justify-content: center;
+	display: flex;
+	margin: 50px;
+	font-weight: bold;
+	cursor: pointer;
+	transition: .5s ease-in-out;
 }
 .login{
 	height: 460px;
@@ -178,5 +201,5 @@ ion-content {
 	border-radius: 60% / 10%;
 	transform: translateY(-180px);
 	transition: .8s ease-in-out;
-    margin-top: 17%;
+    margin-top: -25%;
 }
