@@ -54,8 +54,8 @@ export class LoginPage {
     });
     await alert.present();
   }
-  isLoggedIn(): boolean {
-    return localStorage.getItem('userToken') !== null; 
-  }
+
+
+
   
 }
