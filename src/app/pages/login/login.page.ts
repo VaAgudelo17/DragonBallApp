@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { NavController } from '@ionic/angular';
+import { NavController, AlertController } from '@ionic/angular';
 
 @Component({
   selector: 'app-login',
@@ -7,26 +7,55 @@ import { NavController } from '@ionic/angular';
   styleUrls: ['./login.page.scss'],
 })
 export class LoginPage {
-  public showLogin = false;
+  public showLogin = true; 
   email: string = '';
   password: string = '';
+  user: string = '';
 
-  constructor(private navCtrl: NavController) {}
+  constructor(private navCtrl: NavController, private alertController: AlertController) {}
 
+  // Función de login
   login() {
-    // Agrega aquí la lógica para autenticar al usuario
-    if (this.email === 'test@example.com' && this.password === 'password123') {
-      // Navega a la página principal o a la que desees tras el login exitoso
-      this.navCtrl.navigateForward('/home');
+    const storedEmail = localStorage.getItem('email');
+    const storedPassword = localStorage.getItem('password');
+    // Simula la autenticación (reemplaza con lógica real)
+    if (this.email === storedEmail && this.password === storedPassword) {
+      // Si los datos coinciden, redirigir a tab1
+      localStorage.setItem('userToken', 'dummy_token');
+      this.navCtrl.navigateRoot('/tabs/tab1');
     } else {
-      console.log('Credenciales incorrectas');
+      this.showAlert('Login Failed', 'Invalid email or password.');
     }
   }
+
+  // Función de registro
   signUp() {
-    // Lógica para el registro de usuario
-    console.log('Usuario registrado');
+    if (this.email && this.password && this.user) {
+      localStorage.setItem('email', this.email);
+      localStorage.setItem('password', this.password);
+      this.showAlert('Registration Successful', 'You have been registered successfully.');
+      console.log("Usuario registrado:", this.user);
+    } else {
+      this.showAlert('Registration Failed', 'Please enter valid email and password.');
+      console.log("Registro fallido, datos inválidos.");
+    }
   }
+
   toggleForm() {
     this.showLogin = !this.showLogin;
   }
+
+  // Muestra un mensaje de alerta
+  async showAlert(header: string, message: string) {
+    const alert = await this.alertController.create({
+      header: header,
+      message: message,
+      buttons: ['OK']
+    });
+    await alert.present();
+  }
+  isLoggedIn(): boolean {
+    return localStorage.getItem('userToken') !== null; 
+  }
+  
 }
