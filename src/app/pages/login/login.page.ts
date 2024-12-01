@@ -18,7 +18,6 @@ export class LoginPage {
   login() {
     const storedEmail = localStorage.getItem('email');
     const storedPassword = localStorage.getItem('password');
-    // Simula la autenticación (reemplaza con lógica real)
     if (this.email === storedEmail && this.password === storedPassword) {
       // Si los datos coinciden, redirigir a tab1
       localStorage.setItem('userToken', 'dummy_token');
