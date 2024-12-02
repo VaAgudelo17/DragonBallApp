@@ -1,0 +1,18 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-title>Iniciar Sesión</ion-title>
+    <ion-buttons slot="end">
+      <ion-button (click)="dismissModal()">
+        <ion-icon slot="icon-only" name="close"></ion-icon>
+      </ion-button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content class="ion-padding">
+  <div class="login-prompt-content">
+    <ion-icon name="lock-closed" size="large" class="login-icon"></ion-icon>
+    <p>Debes iniciar sesión para darle like a un personaje.</p>
+    <ion-button expand="block" (click)="redirectToLogin()">Iniciar Sesión</ion-button>
+  </div>
+</ion-content>

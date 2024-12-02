@@ -2,9 +2,10 @@ import { CommonModule } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
-import { IonicModule } from '@ionic/angular';
+import { IonicModule, ModalController } from '@ionic/angular';
 import { DragonBallService } from 'src/app/services/dragon-ball.service';
 import { SharedModule } from 'src/app/shared/shared.module';
+import { LoginPromptComponent } from 'src/app/login-prompt/login-prompt.component';
 
 @Component({
   selector: 'app-tab1',
@@ -21,7 +22,11 @@ export class Tab1Page implements OnInit {
   loading = false;
   favorites: Set<string> = new Set<string>();
 
-  constructor(private dragonBallSvc: DragonBallService, private router: Router) {}
+  constructor(
+    private dragonBallSvc: DragonBallService,
+    private router: Router,
+    private modalController: ModalController
+  ) {}
 
   ngOnInit() {
     this.params.page = 0;
@@ -90,10 +95,18 @@ export class Tab1Page implements OnInit {
     return this.favorites.has(character.id);
   }
 
-  toggleFavorite(character: any, event: Event): void {
+  async toggleFavorite(character: any, event: Event): Promise<void> {
     event.stopPropagation();
-    if (this.favorites.has(character.id)) {
+    const isLoggedIn = false;
 
+    if (!isLoggedIn) {
+      const modal = await this.modalController.create({
+        component: LoginPromptComponent
+      });
+      return await modal.present();
+    }
+
+    if (this.favorites.has(character.id)) {
       this.favorites.delete(character.id);
       console.log('Tu personaje ' + character.name + ' fue eliminado de favoritos');
     } else {
