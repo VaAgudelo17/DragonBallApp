@@ -10,7 +10,11 @@ export class StatsService {
 
   constructor(private http: HttpClient) {}
 
-  getUserStats(): Observable<any> {
+  getUserStats(email: string): Observable<any> {
+    return this.http.get(`${this.apiUrl}/user-stats/${email}`);
+  }
+
+  getAllUserStats(): Observable<any> {
     return this.http.get(`${this.apiUrl}/user-stats`);
   }
 

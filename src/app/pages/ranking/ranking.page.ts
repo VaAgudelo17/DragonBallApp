@@ -16,8 +16,8 @@ export class RankingPage implements OnInit {
   }
 
   loadUserStats() {
-    this.statsService.getUserStats().subscribe({
-      next: (stats: any) => {
+    this.statsService.getAllUserStats().subscribe({
+      next: (stats) => {
         this.users = stats.map((stat: any, index: number) => ({
           nombre: stat.User.username,
           usuario: stat.User.email,
@@ -26,7 +26,7 @@ export class RankingPage implements OnInit {
           ranking: index + 1
         }));
       },
-      error: (error: any) => {
+      error: (error) => {
         console.error('Error fetching user stats:', error);
       }
     });

@@ -156,11 +156,18 @@ export class Tab4Page implements OnInit {
           await modal.present();
 
           // Actualizar estadísticas del usuario
-          if (previousUser) {
-            this.statsService.incrementExchangedCount(email).subscribe();
-          } else {
-            this.statsService.incrementCapturedCount(email).subscribe();
-          }
+          this.statsService.getUserStats(email).subscribe({
+            next: (stats) => {
+              if (previousUser) {
+                this.statsService.incrementExchangedCount(stats.userId).subscribe();
+              } else {
+                this.statsService.incrementCapturedCount(stats.userId).subscribe();
+              }
+            },
+            error: (error) => {
+              console.error('Error fetching user stats:', error);
+            }
+          });
 
           // Navegar al detalle del personaje después de mostrar el modal
           this.goToCharacterDetail(characterId);
