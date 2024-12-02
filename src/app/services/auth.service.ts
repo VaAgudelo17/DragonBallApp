@@ -6,7 +6,7 @@ import { Observable } from 'rxjs';
   providedIn: 'root'
 })
 export class AuthService {
-  private apiUrl = 'https://dragonback-production.up.railway.app/';
+  private apiUrl = 'https://dragonback-production.up.railway.app';
   constructor(private http: HttpClient) {}
 
   signUp(user: any): Observable<any> {
