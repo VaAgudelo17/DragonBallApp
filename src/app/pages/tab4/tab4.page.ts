@@ -6,6 +6,8 @@ import { BarcodeScanner } from '@ionic-native/barcode-scanner/ngx';
 import { DragonBallService } from 'src/app/services/dragon-ball.service';
 import { ModalController } from '@ionic/angular';
 import { LoginPromptComponent } from 'src/app/components/login-prompt/login-prompt.component';
+import { AuthService } from 'src/app/services/auth.service';
+import { SuccessModalComponent } from 'src/app/components/success-modal/success-modal.component';
 
 @Component({
   selector: 'app-tab4',
@@ -22,7 +24,8 @@ export class Tab4Page implements OnInit {
     private router: Router,
     private barcodeScanner: BarcodeScanner,
     private dragonBallSvc: DragonBallService,
-    private modalController: ModalController
+    private modalController: ModalController,
+    private authService: AuthService
   ) {
     const accessedFromButton = sessionStorage.getItem('accessedFromButton');
   }
@@ -110,8 +113,8 @@ export class Tab4Page implements OnInit {
           const characterId = scannedUrl.split('/character-detail/')[1];
           console.log('ID del personaje:', characterId);
 
-          // Guardar el villano escaneado en localStorage
-          this.saveVillainToStorage(characterId);
+          // Guardar el villano escaneado en la base de datos
+          this.saveVillainToDatabase(characterId);
 
           // Navegar al detalle del personaje
           this.goToCharacterDetail(characterId);
@@ -130,14 +133,24 @@ export class Tab4Page implements OnInit {
     this.router.navigate(['character-detail', id]);
   }
 
-  saveVillainToStorage(characterId: string) {
-    let villains = JSON.parse(localStorage.getItem('villains') || '[]');
-    if (!villains.includes(characterId)) {
-      villains.push(characterId);
-      localStorage.setItem('villains', JSON.stringify(villains));
-      console.log('Villano guardado:', characterId); // Log para verificar el guardado
+  async saveVillainToDatabase(characterId: string) {
+    const email = localStorage.getItem('userEmail'); // Obtener el correo electrónico del usuario desde localStorage
+    if (email) {
+      this.authService.addVillain(email, characterId).subscribe({
+        next: async (response) => {
+          console.log('Villano guardado en la base de datos:', response);
+          // Mostrar el modal de éxito
+          const modal = await this.modalController.create({
+            component: SuccessModalComponent
+          });
+          await modal.present();
+        },
+        error: (error) => {
+          console.error('Error al guardar el villano en la base de datos:', error);
+        }
+      });
     } else {
-      console.log('El villano ya está guardado:', characterId); // Log para duplicados
+      console.error('No se pudo obtener el correo electrónico del usuario.');
     }
   }
 }
