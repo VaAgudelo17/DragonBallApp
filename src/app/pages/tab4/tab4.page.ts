@@ -136,9 +136,19 @@ export class Tab4Page implements OnInit {
       this.authService.addVillain(email, characterId).subscribe({
         next: async (response) => {
           console.log('Villano guardado en la base de datos:', response);
-          // Mostrar el modal de éxito
+          const { previousUser } = response;
+          const previousUserName = previousUser ? previousUser.username : 'Alguien';
+
+          // Obtener el nombre del personaje
+          const character = await this.dragonBallSvc.getCharacterById(characterId).toPromise();
+          const characterName = character.name;
+
+          // Mostrar el modal de éxito con el mensaje personalizado
           const modal = await this.modalController.create({
-            component: SuccessModalComponent
+            component: SuccessModalComponent,
+            componentProps: {
+              message: `${previousUserName} te transfirió ${characterName}`
+            }
           });
           await modal.present();
           // Navegar al detalle del personaje después de mostrar el modal
