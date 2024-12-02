@@ -168,4 +168,10 @@ export class Tab1Page implements OnInit {
       console.error('No se pudo obtener el correo electrónico del usuario.');
     }
   }
+
+  logout() {
+    localStorage.removeItem('isLoggedIn');
+    localStorage.removeItem('userEmail');
+    this.router.navigate(['/login']); // Redirigir a la página de inicio de sesión
+  }
 }
