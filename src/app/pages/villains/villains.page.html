@@ -6,29 +6,31 @@
 
 <ion-content [fullscreen]="true">
   <div class="fondo">
-    <div class="content-container">
-      <h2>VILLANOS CAPTURADOS</h2>
-      
-      <div *ngIf="capturedVillains.length === 0">
-        <p>No has capturado ningún villano.</p>
-      </div>
-
-      <ion-grid>
-        <ion-row>
-          <ion-col *ngFor="let villain of capturedVillains" size-lg="4" size-md="6" size-sm="8" size="12">
-            <ion-card class="character-card">
-              <div class="character-image-container">
-                <ion-img [src]="villain.image" class="character-image"></ion-img>
-              </div>
-              <ion-card-content class="info">
-                <p>NOMBRE: {{ villain.name }}</p>
-                <p>RAZA: {{ villain.race }}</p>
-                <p>KI: {{ villain.ki }}</p>
-              </ion-card-content>
-            </ion-card>
-          </ion-col>
-        </ion-row>
-      </ion-grid>
-    </div>
+    <ion-grid>
+      <ion-row>
+        <ion-col size="12">
+          <ion-item>
+            <ion-label position="floating">ID del Villano</ion-label>
+            <ion-input [(ngModel)]="villainId" type="text"></ion-input>
+          </ion-item>
+          <ion-button expand="block" (click)="addVillain()">Agregar Villano</ion-button>
+        </ion-col>
+      </ion-row>
+      <ion-row>
+        <ion-col *ngFor="let villain of capturedVillains" size-lg="4" size-md="6" size-sm="8" size="12">
+          <ion-card class="character-card">
+            <div class="character-image-container">
+              <ion-img [src]="villain.image" class="character-image"></ion-img>
+            </div>
+            <ion-card-content class="info">
+              <p>NOMBRE: {{ villain.name }}</p>
+              <p>RAZA: {{ villain.race }}</p>
+              <p>KI: {{ villain.ki }}</p>
+              <ion-button expand="block" (click)="transferVillain(villain.id)">Transferir</ion-button>
+            </ion-card-content>
+          </ion-card>
+        </ion-col>
+      </ion-row>
+    </ion-grid>
   </div>
 </ion-content>

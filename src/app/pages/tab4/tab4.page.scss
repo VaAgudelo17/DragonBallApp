@@ -1,33 +1,33 @@
 .map-container {
-  position: relative; 
+  position: relative;
   display: flex;
-  justify-content: center; 
-  align-items: center; 
+  justify-content: center;
+  align-items: center;
   height: calc(100% - 180px); /* Deja espacio para los botones */
   overflow: auto; /* Permitir el scroll si es necesario */
 }
 
 #mapId {
-  width: 80vw; 
-  height: 60vh; 
-  border: 2px solid #000; 
-  border-radius: 10px; 
+  width: 80vw;
+  height: 60vh;
+  border: 2px solid #000;
+  border-radius: 10px;
 }
 
 .title-container {
-  text-align: center; 
-  margin-top: 60px; 
+  text-align: center;
+  margin-top: 60px;
 }
 
 .map-title {
-  font-size: 24px; 
-  font-weight: bold; 
+  font-size: 24px;
+  font-weight: bold;
 }
 
 .button-container {
-  display: flex; 
-  justify-content: center; 
-  align-items: center; 
+  display: flex;
+  justify-content: center;
+  align-items: center;
   margin: 10px 0; /* Espaciado entre el contenedor de botones y el mapa */
 }
 
@@ -44,8 +44,8 @@
 
 @media (max-width: 768px) {
   #mapId {
-    margin-left: 20px; 
-    width: 75vw; 
+    margin-left: 20px;
+    width: 75vw;
     height: 50vh; /* Ajusta el tamaño para pantallas más pequeñas */
   }
 

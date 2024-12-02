@@ -6,7 +6,7 @@ import { Observable } from 'rxjs';
   providedIn: 'root'
 })
 export class AuthService {
-  private apiUrl = 'http://localhost:3000';
+  private apiUrl = 'http://localhost:3000'; // Cambia esto si tu backend está en otra URL
 
   constructor(private http: HttpClient) {}
 
@@ -16,5 +16,25 @@ export class AuthService {
 
   login(credentials: any): Observable<any> {
     return this.http.post(`${this.apiUrl}/login`, credentials);
+  }
+
+  addFavorite(email: string, characterId: string): Observable<any> {
+    return this.http.post(`${this.apiUrl}/favorites`, { email, characterId });
+  }
+
+  removeFavorite(email: string, characterId: string): Observable<any> {
+    return this.http.delete(`${this.apiUrl}/favorites`, { body: { email, characterId } });
+  }
+
+  getFavorites(email: string): Observable<any> {
+    return this.http.get(`${this.apiUrl}/favorites/${email}`);
+  }
+
+  addVillain(email: string, characterId: string): Observable<any> {
+    return this.http.post(`${this.apiUrl}/villains`, { email, characterId });
+  }
+
+  getVillains(email: string): Observable<any> {
+    return this.http.get(`${this.apiUrl}/villains/${email}`);
   }
 }

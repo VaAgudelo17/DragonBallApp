@@ -6,6 +6,7 @@ import { IonicModule, ModalController } from '@ionic/angular';
 import { DragonBallService } from 'src/app/services/dragon-ball.service';
 import { SharedModule } from 'src/app/shared/shared.module';
 import { LoginPromptComponent } from 'src/app/components/login-prompt/login-prompt.component';
+import { AuthService } from 'src/app/services/auth.service';
 import { AlertModalComponent } from 'src/app/components/alert-modal/alert-modal.component';
 
 @Component({
@@ -26,7 +27,8 @@ export class Tab1Page implements OnInit {
   constructor(
     private dragonBallSvc: DragonBallService,
     private router: Router,
-    private modalController: ModalController
+    private modalController: ModalController,
+    private authService: AuthService
   ) {}
 
   ngOnInit() {
@@ -93,7 +95,7 @@ export class Tab1Page implements OnInit {
   }
 
   isFavorite(character: any): boolean {
-    return this.favorites.has(character.id);
+    return this.favorites.has(character.id.toString());
   }
 
   async presentAlert(message: string) {
@@ -107,6 +109,7 @@ export class Tab1Page implements OnInit {
   async toggleFavorite(character: any, event: Event): Promise<void> {
     event.stopPropagation();
     const isLoggedIn = localStorage.getItem('isLoggedIn') === 'true';
+    const email = localStorage.getItem('userEmail'); // Obtener el correo electrónico del usuario desde localStorage
 
     if (!isLoggedIn) {
       const modal = await this.modalController.create({
@@ -115,21 +118,54 @@ export class Tab1Page implements OnInit {
       return await modal.present();
     }
 
-    if (this.favorites.has(character.id)) {
-      this.favorites.delete(character.id);
-      console.log('Tu personaje ' + character.name + ' fue eliminado de favoritos');
-    } else {
-      this.favorites.add(character.id);
-      console.log('Tu personaje ' + character.name + ' fue añadido a favoritos');
-    }
+    if (email) { // Verificar que email no sea null
+      if (this.favorites.has(character.id.toString())) {
+        this.favorites.delete(character.id.toString());
+        console.log('Tu personaje ' + character.name + ' fue eliminado de favoritos');
 
-    localStorage.setItem('favorites', JSON.stringify(Array.from(this.favorites)));
+        // Eliminar el favorito de la base de datos
+        this.authService.removeFavorite(email, character.id.toString()).subscribe({
+          next: (response: any) => {
+            console.log('Favorito eliminado de la base de datos:', response);
+          },
+          error: (error: any) => {
+            console.error('Error al eliminar el favorito de la base de datos:', error);
+          }
+        });
+      } else {
+        this.favorites.add(character.id.toString());
+        console.log('Tu personaje ' + character.name + ' fue añadido a favoritos');
+
+        // Guardar el favorito en la base de datos
+        this.authService.addFavorite(email, character.id.toString()).subscribe({
+          next: (response) => {
+            console.log('Favorito guardado en la base de datos:', response);
+          },
+          error: (error) => {
+            console.error('Error al guardar el favorito en la base de datos:', error);
+          }
+        });
+      }
+
+      localStorage.setItem('favorites', JSON.stringify(Array.from(this.favorites)));
+    } else {
+      console.error('No se pudo obtener el correo electrónico del usuario.');
+    }
   }
 
   loadFavorites(): void {
-    const storedFavorites = localStorage.getItem('favorites');
-    if (storedFavorites) {
-      this.favorites = new Set<string>(JSON.parse(storedFavorites));
+    const email = localStorage.getItem('userEmail'); // Obtener el correo electrónico del usuario desde localStorage
+    if (email) {
+      this.authService.getFavorites(email).subscribe({
+        next: (favorites) => {
+          this.favorites = new Set<string>(favorites.map((fav: any) => fav.characterId.toString()));
+        },
+        error: (error) => {
+          console.error('Error fetching favorites:', error);
+        }
+      });
+    } else {
+      console.error('No se pudo obtener el correo electrónico del usuario.');
     }
   }
 }

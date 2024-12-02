@@ -5,6 +5,7 @@ import { forkJoin, of } from 'rxjs';
 import { catchError } from 'rxjs/operators';
 import { ModalController } from '@ionic/angular';
 import { LoginPromptComponent } from 'src/app/components/login-prompt/login-prompt.component';
+import { AuthService } from 'src/app/services/auth.service';
 
 @Component({
   selector: 'app-tab3',
@@ -18,7 +19,8 @@ export class Tab3Page implements OnInit {
   constructor(
     private router: Router,
     private dragonBallSvc: DragonBallService,
-    private modalController: ModalController
+    private modalController: ModalController,
+    private authService: AuthService
   ) {}
 
   ngOnInit() {
@@ -49,10 +51,19 @@ export class Tab3Page implements OnInit {
   }
 
   loadFavorites(): void {
-    const storedFavorites = localStorage.getItem('favorites');
-    if (storedFavorites) {
-      this.favorites = new Set<string>(JSON.parse(storedFavorites));
-      this.getFavoriteCharacters();
+    const email = localStorage.getItem('userEmail'); // Obtener el correo electrónico del usuario desde localStorage
+    if (email) {
+      this.authService.getFavorites(email).subscribe({
+        next: (favorites) => {
+          this.favorites = new Set<string>(favorites.map((fav: any) => fav.characterId));
+          this.getFavoriteCharacters();
+        },
+        error: (error) => {
+          console.error('Error fetching favorites:', error);
+        }
+      });
+    } else {
+      console.error('No se pudo obtener el correo electrónico del usuario.');
     }
   }
 
@@ -86,33 +97,47 @@ export class Tab3Page implements OnInit {
   }
 
   isFavorite(character: any): boolean {
-    return this.favorites.has(character.id);
+    return this.favorites.has(character.id.toString());
   }
 
   toggleFavorite(character: any, event: Event): void {
     event.stopPropagation();
-    if (this.favorites.has(character.id)) {
-      this.favorites.delete(character.id);
-      console.log('Tu personaje ' + character.name + ' fue eliminado de favoritos');
-      setTimeout(() => {
-        this.favoriteCharacters = this.favoriteCharacters.filter(c => c.id !== character.id);
-      }, 500);
-    } else {
-      this.favorites.add(character.id);
-      console.log('Tu personaje ' + character.name + ' fue añadido a favoritos');
+    const email = localStorage.getItem('userEmail'); // Obtener el correo electrónico del usuario desde localStorage
 
-      this.dragonBallSvc.getCharacterById(character.id).subscribe({
-        next: (newCharacter) => {
-          const isDuplicate = this.favoriteCharacters.some(c => c.id === newCharacter.id);
-          if (!isDuplicate) {
-            this.favoriteCharacters.push(newCharacter);
+    if (email) {
+      if (this.favorites.has(character.id.toString())) {
+        this.favorites.delete(character.id.toString());
+        console.log('Tu personaje ' + character.name + ' fue eliminado de favoritos');
+
+        // Eliminar el favorito de la base de datos
+        this.authService.removeFavorite(email, character.id.toString()).subscribe({
+          next: (response: any) => {
+            console.log('Favorito eliminado de la base de datos:', response);
+            this.favoriteCharacters = this.favoriteCharacters.filter(c => c.id !== character.id);
+          },
+          error: (error: any) => {
+            console.error('Error al eliminar el favorito de la base de datos:', error);
           }
-        },
-        error: (error) => {
-          console.error('Error fetching character:', error);
-        },
-      });
+        });
+      } else {
+        this.favorites.add(character.id.toString());
+        console.log('Tu personaje ' + character.name + ' fue añadido a favoritos');
+
+        // Guardar el favorito en la base de datos
+        this.authService.addFavorite(email, character.id.toString()).subscribe({
+          next: (response) => {
+            console.log('Favorito guardado en la base de datos:', response);
+            this.favoriteCharacters.push(character);
+          },
+          error: (error) => {
+            console.error('Error al guardar el favorito en la base de datos:', error);
+          }
+        });
+      }
+
+      localStorage.setItem('favorites', JSON.stringify(Array.from(this.favorites)));
+    } else {
+      console.error('No se pudo obtener el correo electrónico del usuario.');
     }
-    localStorage.setItem('favorites', JSON.stringify(Array.from(this.favorites)));
   }
 }

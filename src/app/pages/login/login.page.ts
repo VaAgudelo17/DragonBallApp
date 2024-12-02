@@ -62,7 +62,8 @@ export class LoginPage {
     this.authService.login(credentials).subscribe(
       async response => {
         console.log('User logged in successfully', response);
-        localStorage.setItem('isLoggedIn', 'true'); // Guardar estado de autenticación
+        localStorage.setItem('isLoggedIn', 'true');
+        localStorage.setItem('userEmail', this.email);
         this.router.navigate(['/tabs/tab1']);
       },
       async error => {
