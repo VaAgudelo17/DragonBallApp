@@ -115,9 +115,6 @@ export class Tab4Page implements OnInit {
 
           // Guardar el villano escaneado en la base de datos
           this.saveVillainToDatabase(characterId);
-
-          // Navegar al detalle del personaje
-          this.goToCharacterDetail(characterId);
         } else {
           console.error('La URL escaneada no es válida para detalles del personaje');
         }
@@ -144,6 +141,8 @@ export class Tab4Page implements OnInit {
             component: SuccessModalComponent
           });
           await modal.present();
+          // Navegar al detalle del personaje después de mostrar el modal
+          this.goToCharacterDetail(characterId);
         },
         error: (error) => {
           console.error('Error al guardar el villano en la base de datos:', error);
