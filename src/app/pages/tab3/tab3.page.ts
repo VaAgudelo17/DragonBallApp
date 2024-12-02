@@ -3,6 +3,8 @@ import { Router } from '@angular/router';
 import { DragonBallService } from 'src/app/services/dragon-ball.service';
 import { forkJoin, of } from 'rxjs';
 import { catchError } from 'rxjs/operators';
+import { ModalController } from '@ionic/angular';
+import { LoginPromptComponent } from 'src/app/components/login-prompt/login-prompt.component';
 
 @Component({
   selector: 'app-tab3',
@@ -13,17 +15,32 @@ export class Tab3Page implements OnInit {
   favoriteCharacters: any[] = [];
   favorites: Set<string> = new Set<string>();
 
-  constructor(private router: Router, private dragonBallSvc: DragonBallService) {}
+  constructor(
+    private router: Router,
+    private dragonBallSvc: DragonBallService,
+    private modalController: ModalController
+  ) {}
 
   ngOnInit() {
-    this.loadFavorites();
+    this.checkLoginStatus();
     window.addEventListener('storage', () => {
       this.loadFavorites();
     });
   }
 
-  // Método para cargar los personajes favoritos sin necesidad de recargar la página
   ionViewWillEnter() {
+    this.checkLoginStatus();
+  }
+
+  async checkLoginStatus() {
+    const isLoggedIn = localStorage.getItem('isLoggedIn') === 'true';
+    if (!isLoggedIn) {
+      const modal = await this.modalController.create({
+        component: LoginPromptComponent
+      });
+      await modal.present();
+      return;
+    }
     this.loadFavorites();
   }
 
@@ -45,13 +62,13 @@ export class Tab3Page implements OnInit {
       this.dragonBallSvc.getCharacterById(id).pipe(
         catchError((error) => {
           console.error('Error fetching character:', error);
-          return of(null); 
+          return of(null);
         })
       )
     );
-    
+
     forkJoin(characterRequests).subscribe((characters) => {
-      console.log('Fetched characters:', characters); 
+      console.log('Fetched characters:', characters);
 
       characters.forEach((character) => {
         if (character) {
@@ -63,7 +80,7 @@ export class Tab3Page implements OnInit {
           }
         }
       });
-      
+
       console.log('Final favorite characters list:', this.favoriteCharacters);
     });
   }

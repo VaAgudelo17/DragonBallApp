@@ -1,0 +1,16 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-title>Alerta</ion-title>
+    <ion-buttons slot="end">
+      <ion-button (click)="dismiss()">
+        <ion-icon slot="icon-only" name="close"></ion-icon>
+      </ion-button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content class="ion-padding alert-modal-content">
+  <ion-icon name="alert-circle" size="large" class="alert-icon"></ion-icon>
+  <p>{{ message }}</p>
+  <ion-button expand="block" (click)="dismiss()">OK</ion-button>
+</ion-content>

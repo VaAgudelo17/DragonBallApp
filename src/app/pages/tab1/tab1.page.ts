@@ -5,7 +5,8 @@ import { Router } from '@angular/router';
 import { IonicModule, ModalController } from '@ionic/angular';
 import { DragonBallService } from 'src/app/services/dragon-ball.service';
 import { SharedModule } from 'src/app/shared/shared.module';
-import { LoginPromptComponent } from 'src/app/login-prompt/login-prompt.component';
+import { LoginPromptComponent } from 'src/app/components/login-prompt/login-prompt.component';
+import { AlertModalComponent } from 'src/app/components/alert-modal/alert-modal.component';
 
 @Component({
   selector: 'app-tab1',
@@ -95,9 +96,17 @@ export class Tab1Page implements OnInit {
     return this.favorites.has(character.id);
   }
 
+  async presentAlert(message: string) {
+    const modal = await this.modalController.create({
+      component: AlertModalComponent,
+      componentProps: { message }
+    });
+    return await modal.present();
+  }
+
   async toggleFavorite(character: any, event: Event): Promise<void> {
     event.stopPropagation();
-    const isLoggedIn = false;
+    const isLoggedIn = localStorage.getItem('isLoggedIn') === 'true';
 
     if (!isLoggedIn) {
       const modal = await this.modalController.create({

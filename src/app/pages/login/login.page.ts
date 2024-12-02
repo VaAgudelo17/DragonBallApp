@@ -1,5 +1,8 @@
 import { Component } from '@angular/core';
-import { NavController, AlertController } from '@ionic/angular';
+import { AuthService } from 'src/app/services/auth.service';
+import { Router } from '@angular/router';
+import { ModalController } from '@ionic/angular';
+import { AlertModalComponent } from 'src/app/components/alert-modal/alert-modal.component';
 
 @Component({
   selector: 'app-login',
@@ -7,54 +10,65 @@ import { NavController, AlertController } from '@ionic/angular';
   styleUrls: ['./login.page.scss'],
 })
 export class LoginPage {
-  public showLogin = true; 
+  user: string = '';
   email: string = '';
   password: string = '';
-  user: string = '';
 
-  constructor(private navCtrl: NavController, private alertController: AlertController) {}
+  constructor(
+    private authService: AuthService,
+    private router: Router,
+    private modalController: ModalController
+  ) {}
 
-  // Función de login
-  login() {
-    const storedEmail = localStorage.getItem('email');
-    const storedPassword = localStorage.getItem('password');
-    if (this.email === storedEmail && this.password === storedPassword) {
-      // Si los datos coinciden, redirigir a tab1
-      localStorage.setItem('userToken', 'dummy_token');
-      this.navCtrl.navigateRoot('/tabs/tab1');
-    } else {
-      this.showAlert('Login Failed', 'Invalid email or password.');
-    }
-  }
-
-  // Función de registro
-  signUp() {
-    if (this.email && this.password && this.user) {
-      localStorage.setItem('email', this.email);
-      localStorage.setItem('password', this.password);
-      this.showAlert('Registration Successful', 'You have been registered successfully.');
-      console.log("Usuario registrado:", this.user);
-    } else {
-      this.showAlert('Registration Failed', 'Please enter valid email and password.');
-      console.log("Registro fallido, datos inválidos.");
-    }
-  }
-
-  toggleForm() {
-    this.showLogin = !this.showLogin;
-  }
-
-  // Muestra un mensaje de alerta
-  async showAlert(header: string, message: string) {
-    const alert = await this.alertController.create({
-      header: header,
-      message: message,
-      buttons: ['OK']
+  async presentAlert(message: string) {
+    const modal = await this.modalController.create({
+      component: AlertModalComponent,
+      componentProps: { message }
     });
-    await alert.present();
+    return await modal.present();
   }
 
+  async signUp() {
+    if (!this.user || !this.email || !this.password) {
+      await this.presentAlert('Todos los campos son obligatorios.');
+      return;
+    }
 
+    const user = { username: this.user, email: this.email, password: this.password };
+    this.authService.signUp(user).subscribe(
+      async response => {
+        console.log('User registered successfully', response);
+        await this.presentAlert('Registro exitoso.');
+        this.router.navigate(['/tabs/tab1']);
+      },
+      async error => {
+        console.error('Error registering user', error);
+        if (error.status === 400 && error.error.message.includes('unique constraint')) {
+          await this.presentAlert('El correo o nombre de usuario ya existe.');
+        } else {
+          await this.presentAlert('Error al registrar el usuario.');
+        }
+      }
+    );
+  }
 
-  
+  async login() {
+    if (!this.email || !this.password) {
+      await this.presentAlert('Todos los campos son obligatorios.');
+      return;
+    }
+
+    const credentials = { email: this.email, password: this.password };
+    this.authService.login(credentials).subscribe(
+      async response => {
+        console.log('User logged in successfully', response);
+        localStorage.setItem('isLoggedIn', 'true'); // Guardar estado de autenticación
+        this.router.navigate(['/tabs/tab1']);
+      },
+      async error => {
+        console.error('Error logging in', error);
+        await this.presentAlert('Error al iniciar sesión.');
+      }
+    );
+  }
 }
