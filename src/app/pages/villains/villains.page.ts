@@ -106,5 +106,10 @@ export class VillainsPage implements OnInit {
       componentProps: { qrData }
     });
     await modal.present();
+
+    const { data, role } = await modal.onDidDismiss();
+    if (role === 'closed') {
+      this.loadCapturedVillains();
+    }
   }
 }

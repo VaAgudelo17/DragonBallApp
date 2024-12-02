@@ -36,6 +36,7 @@ export class Tab4Page implements OnInit {
 
   ionViewWillEnter() {
     this.checkLoginStatus();
+    this.loadCapturedVillains();
   }
 
   async checkLoginStatus() {
@@ -161,5 +162,45 @@ export class Tab4Page implements OnInit {
     } else {
       console.error('No se pudo obtener el correo electrónico del usuario.');
     }
+  }
+
+  // Cargar villanos guardados desde la base de datos
+  loadCapturedVillains() {
+    const email = localStorage.getItem('userEmail'); // Obtener el correo electrónico del usuario desde localStorage
+    if (email) {
+      this.authService.getVillains(email).subscribe({
+        next: (villains) => {
+          this.villains = []; // Limpiar la lista antes de recargar
+          const villainIds = villains.map((villain: any) => villain.characterId);
+          console.log('IDs de villanos guardados:', villainIds); // Log para verificar los IDs
+
+          if (villainIds.length === 0) {
+            console.log('No hay villanos capturados en la base de datos.');
+            return;
+          }
+
+          villainIds.forEach((id: string) => {
+            this.dragonBallSvc.getCharacterById(id).subscribe({
+              next: (res: any) => {
+                this.villains.push(res);
+                console.log('Villano cargado:', res); // Log para verificar que se carga cada villano
+              },
+              error: (err: any) => {
+                console.error('Error al cargar el villano', err);
+              }
+            });
+          });
+        },
+        error: (error) => {
+          console.error('Error fetching villains:', error);
+        }
+      });
+    } else {
+      console.error('No se pudo obtener el correo electrónico del usuario.');
+    }
+  }
+
+  reloadPage() {
+    window.location.reload();
   }
 }

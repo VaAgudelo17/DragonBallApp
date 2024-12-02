@@ -12,6 +12,8 @@ export class QrModalComponent {
   constructor(private modalController: ModalController) {}
 
   dismiss() {
-    this.modalController.dismiss();
+    this.modalController.dismiss().then(() => {
+      window.location.reload();
+    });
   }
 }
