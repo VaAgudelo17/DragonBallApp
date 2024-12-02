@@ -7,7 +7,7 @@ import { DragonBallService } from 'src/app/services/dragon-ball.service';
 import { ModalController } from '@ionic/angular';
 import { LoginPromptComponent } from 'src/app/components/login-prompt/login-prompt.component';
 import { AuthService } from 'src/app/services/auth.service';
-import { SuccessModalComponent } from 'src/app/components/succes-modal/succes-modal.component';
+import { SuccessModalComponent } from 'src/app/components/succes-modal/success-modal.component';
 
 @Component({
   selector: 'app-tab4',

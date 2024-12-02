@@ -9,7 +9,7 @@ import { Geolocation } from '@awesome-cordova-plugins/geolocation/ngx';
 import { LoginPromptComponent } from './components/login-prompt/login-prompt.component';
 import { AlertModalComponent } from './components/alert-modal/alert-modal.component';
 import { QrModalModule } from './components/qr-modal/qr-modal.module';
-import { SuccessModalComponent } from './components/succes-modal/succes-modal.component';
+import { SuccessModalComponent } from './components/succes-modal/success-modal.component';
 
 @NgModule({
   declarations: [AppComponent, LoginPromptComponent, AlertModalComponent, SuccessModalComponent],

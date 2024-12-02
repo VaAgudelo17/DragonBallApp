@@ -1,7 +1,7 @@
 import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
 import { IonicModule } from '@ionic/angular';
 
-import { SuccessModalComponent } from './succes-modal.component';
+import { SuccessModalComponent } from './success-modal.component';
 
 describe('SuccessModalComponent', () => {
   let component: SuccessModalComponent;
