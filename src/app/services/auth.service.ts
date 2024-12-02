@@ -6,7 +6,7 @@ import { Observable } from 'rxjs';
   providedIn: 'root'
 })
 export class AuthService {
-  private apiUrl = 'http://localhost:3000'; // Cambia esto si tu backend está en otra URL
+  private apiUrl = 'https://dragonback-production.up.railway.app'; // Cambia esto si tu backend está en otra URL
 
   constructor(private http: HttpClient) {}
 
