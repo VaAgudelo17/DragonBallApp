@@ -6,10 +6,11 @@
     width: 100%;
     min-height: 100%;
     height: auto;
-    background-image: url('https://i.pinimg.com/originals/66/c0/e2/66c0e225d3314628d1e898c537ec3180.gif');
-    background-size: 280px 280px;
+    background-image: url('https://media.sketchfab.com/models/8a84d278ab1247f4b6c0d304243a4973/thumbnails/bd440559b99746cc8c32575b53c45c47/2702d0339ff74920bf215999c632af57.jpeg');
     background-repeat: repeat;
     background-position: center;
+    ///ocupar toda la pantalla
+    background-size: cover;
     z-index: -1;
     padding: 0;
     margin: 0;
@@ -40,11 +41,18 @@
     display: flex;
     align-items: stretch;
   }
+  .VillanButtom{
+    color: white;
+    border-radius: 20px;
+    margin-top: 10px;
+    ///mover a la derecha
+    margin-left: 10%;
+  }
 
   .character-card {
     display: flex;
     flex-direction: column;
-    height: 60%;
+    height: 95%;
     width: 60%;
     min-height: 300px;
     box-shadow: 0 2px 5px rgba(0,0,0,0.2);
@@ -61,6 +69,17 @@
     max-height: 100%;
     max-width: 100%;
   }
+  .transferir{
+    color: white;
+    border-radius: 50px;
+    margin-top: 10px;
+    ///anchura del boton
+    width: 50%;
+    text-align: center;
+    margin-left: 25%;
+    
+   
+  }
 
   .character-image-container {
     display: flex;
@@ -71,8 +90,10 @@
 
   ion-card-content {
     flex: 1;
-    padding: 15px;
+    padding: 2px;
     text-align: center;
+    ///agrandar veticalemnte
+    
   }
 
   ion-card-content h2, ion-card-content p {
