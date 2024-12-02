@@ -8,6 +8,7 @@ import { ModalController } from '@ionic/angular';
 import { LoginPromptComponent } from 'src/app/components/login-prompt/login-prompt.component';
 import { AuthService } from 'src/app/services/auth.service';
 import { SuccessModalComponent } from 'src/app/components/succes-modal/success-modal.component';
+import { StatsService } from 'src/app/services/stats.service';
 
 @Component({
   selector: 'app-tab4',
@@ -25,7 +26,8 @@ export class Tab4Page implements OnInit {
     private barcodeScanner: BarcodeScanner,
     private dragonBallSvc: DragonBallService,
     private modalController: ModalController,
-    private authService: AuthService
+    private authService: AuthService,
+    private statsService: StatsService
   ) {
     const accessedFromButton = sessionStorage.getItem('accessedFromButton');
   }
@@ -152,6 +154,14 @@ export class Tab4Page implements OnInit {
             }
           });
           await modal.present();
+
+          // Actualizar estadísticas del usuario
+          if (previousUser) {
+            this.statsService.incrementExchangedCount(email).subscribe();
+          } else {
+            this.statsService.incrementCapturedCount(email).subscribe();
+          }
+
           // Navegar al detalle del personaje después de mostrar el modal
           this.goToCharacterDetail(characterId);
         },
